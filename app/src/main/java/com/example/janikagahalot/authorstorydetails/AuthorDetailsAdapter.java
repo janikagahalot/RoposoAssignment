@@ -4,12 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.janikagahalot.authorstorydetails.model.AuthorDetails;
 import com.squareup.picasso.Picasso;
@@ -143,6 +145,7 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
 
             if(button.getText().equals(mContext.getString(R.string.follow))) {
                 if(getLayoutPosition() == 0) {
+                    mDetails[0].setIsFollowing(true);
                     button.setText(mContext.getString(R.string.un_follow));
                     button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
                 }
@@ -152,8 +155,10 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
             }
             else  {
                 if (getLayoutPosition() == 0) {
+                    mDetails[0].setIsFollowing(false);
                     button.setText(mContext.getString(R.string.follow));
                     button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
+
                 }
                 else{
                     mListener.onFollowButtonClicked(false, commonItems.get(mDetails[getLayoutPosition()].getTitle()));
