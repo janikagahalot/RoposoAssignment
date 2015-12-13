@@ -20,8 +20,7 @@ import java.util.HashSet;
 /**
  * Created by janikagahalot on 12/13/15.
  */
-public class AuthorDetailsAdapter extends  RecyclerView.Adapter<AuthorDetailsAdapter.RowViewHolder> {
-
+public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAdapter.RowViewHolder>{
     private static AuthorDetails[] mDetails;
     private static Context mContext;
     private static onFollowButtonClickListener mListener;
@@ -31,7 +30,6 @@ public class AuthorDetailsAdapter extends  RecyclerView.Adapter<AuthorDetailsAda
         mContext = context;
         mListener = listener;
     }
-
     @Override
     public RowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view  = LayoutInflater.from(mContext).inflate(R.layout.card_details, parent, false);
@@ -93,7 +91,7 @@ public class AuthorDetailsAdapter extends  RecyclerView.Adapter<AuthorDetailsAda
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mDetails.length;
     }
 
     public static class RowViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
@@ -169,4 +167,3 @@ public class AuthorDetailsAdapter extends  RecyclerView.Adapter<AuthorDetailsAda
         void onFollowButtonClicked(boolean following, HashSet<Integer> set);
     }
 }
-

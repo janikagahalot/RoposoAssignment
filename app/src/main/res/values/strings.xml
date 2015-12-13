@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Roposo</string>
+    <string name="app_name">AuthorStoryDetails</string>
     <string name="likes">Likes</string>
     <string name="comments">Comment</string>
     <string name="un_follow">UnFollow</string>
