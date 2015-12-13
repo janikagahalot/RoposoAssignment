@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Roposo</string>
+    <string name="likes">Likes</string>
+    <string name="comments">Comment</string>
+    <string name="un_follow">UnFollow</string>
+    <string name="follow">Follow</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+</resources>
