@@ -76,14 +76,14 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
                 holder.mFollowButton.setText(mContext.getString(R.string.follow));
                 holder.mFollowButton.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
             }
-            if(commonItems.containsKey(authorDetails.getTitle())) {
-                HashSet<Integer> set  = commonItems.get(authorDetails.getTitle());
+            if(commonItems.containsKey(authorDetails.getDb())) {
+                HashSet<Integer> set  = commonItems.get(authorDetails.getDb());
                 set.add(position);
             }
             else {
                 HashSet<Integer> positions  = new HashSet<>();
                 positions.add(position);
-                commonItems.put(authorDetails.getTitle(), positions);
+                commonItems.put(authorDetails.getDb(), positions);
             }
             Picasso.with(mContext)
                     .load(authorDetails.getSi())
@@ -148,9 +148,13 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
                     mDetails[0].setIsFollowing(true);
                     button.setText(mContext.getString(R.string.un_follow));
                     button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
+                    mListener.onFollowButton(true, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails, mDetails[0]);
                 }
                 else {
-                    mListener.onFollowButtonClicked(true, commonItems.get(mDetails[getLayoutPosition()].getTitle()));
+                    mDetails[getLayoutPosition()].setIsFollowing(true);
+                    button.setText(mContext.getString(R.string.un_follow));
+                    button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
+                    mListener.onFollowButton(true, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails, mDetails[getLayoutPosition()]);
                 }
             }
             else  {
@@ -159,9 +163,16 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
                     button.setText(mContext.getString(R.string.follow));
                     button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
 
+
                 }
                 else{
-                    mListener.onFollowButtonClicked(false, commonItems.get(mDetails[getLayoutPosition()].getTitle()));
+                   // mListener.onFollowButtonClicked(false, commonItems.get(mDetails[getLayoutPosition()].getTitle()), mDetails, mDetails[getLayoutPosition()]);
+                    mDetails[getLayoutPosition()].setIsFollowing(false);
+                    button.setText(mContext.getString(R.string.follow));
+                    button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
+                    mListener.onFollowButton(false, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails, mDetails[getLayoutPosition()]);
+
+
                 }
             }
         }
@@ -169,6 +180,7 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
     }
 
     public interface onFollowButtonClickListener {
-        void onFollowButtonClicked(boolean following, HashSet<Integer> set);
+        void onFollowButtonClicked(boolean following, HashSet<Integer> set, AuthorDetails[] authorDetails, AuthorDetails authorDetail);
+        void onFollowButton(boolean following, HashSet<Integer> set, AuthorDetails[] authorDetails, AuthorDetails authorDetail);
     }
 }

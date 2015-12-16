@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.janikagahalot.authorstorydetails.model.AuthorDetails;
 import com.example.janikagahalot.authorstorydetails.model.PreFetchLayoutManager;
@@ -52,32 +53,56 @@ public class MainActivity extends AppCompatActivity implements AuthorDetailsAdap
 
 
     @Override
-    public void onFollowButtonClicked(boolean following, HashSet<Integer> positions) {
+    public void onFollowButtonClicked(boolean following, HashSet<Integer> positions, AuthorDetails[] authorDetails,AuthorDetails authorDetail) {
 
         if(following) {
             String text = getString(R.string.following);
             Drawable drawable = getDrawable(R.drawable.followed_button_background);
-            updateButtons(positions, text, drawable, following);
+            updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
         }
         else {
             String text = getString(R.string.follow);
             Drawable drawable = getDrawable(R.drawable.follow_button_background);
-            updateButtons(positions, text, drawable, following);
+            updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
         }
     }
 
-    private void updateButtons(HashSet<Integer> positions, String text, Drawable drawable, boolean following) {
+    @Override
+    public void onFollowButton(boolean following,HashSet<Integer> positions, AuthorDetails[] authorDetails, AuthorDetails authorDetail){
+        PreFetchLayoutManager pflm  = (PreFetchLayoutManager) mRecyclerView.getLayoutManager();
+        for(int i= 1; i< authorDetails.length; i++) {
+            if (authorDetails[i].getDb().equals(authorDetail.getDb())) {
+                authorDetails[i].setIsFollowing(following);
+            }
+            if(following) {
+                String text = getString(R.string.following);
+                Drawable drawable = getDrawable(R.drawable.followed_button_background);
+                updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
+            }
+            else {
+                String text = getString(R.string.follow);
+                Drawable drawable = getDrawable(R.drawable.follow_button_background);
+                updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
+            }
+            //authorDetailsAdapter.notifyDataSetChanged();
+
+        }
+    }
+
+    private void updateButtons(HashSet<Integer> positions, String text, Drawable drawable, boolean following, AuthorDetails[] authorDetails, AuthorDetails authorDetail) {
         PreFetchLayoutManager pflm  = (PreFetchLayoutManager) mRecyclerView.getLayoutManager();
         int first = pflm.findFirstVisibleItemPosition();
         int last =  pflm.findLastVisibleItemPosition();
-        for(int pos : positions) {
-            details[pos].setIsFollowing(following);
-            if(pos >=first && pos <= last) {
-                View view = pflm.findViewByPosition(pos);
-                Button button  = (Button) view.findViewById(R.id.user_follow_button);
-                button.setText(text);
-                button.setBackground(drawable);
-            }
-        }
-    }
+               for (int pos : positions) {
+                    if (pos >= first && pos <= last) {
+                        View view = pflm.findViewByPosition(pos);
+                        Button button = (Button) view.findViewById(R.id.user_follow_button);
+                        button.setText(text);
+                        button.setBackground(drawable);
+                    }
+                }
+
+
+}
+
 }
