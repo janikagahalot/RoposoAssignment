@@ -3,6 +3,7 @@ package com.example.janikagahalot.authorstorydetails;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -46,51 +47,53 @@ public class MainActivity extends AppCompatActivity implements AuthorDetailsAdap
             return;
         }
         mRecyclerView = (RecyclerView) findViewById(R.id.author_details_list);
-        mRecyclerView.setLayoutManager(new PreFetchLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         authorDetailsAdapter = new AuthorDetailsAdapter(this, details, this);
         mRecyclerView.setAdapter(authorDetailsAdapter);
     }
 
 
-    @Override
-    public void onFollowButtonClicked(boolean following, HashSet<Integer> positions, AuthorDetails[] authorDetails,AuthorDetails authorDetail) {
-
-        if(following) {
-            String text = getString(R.string.following);
-            Drawable drawable = getDrawable(R.drawable.followed_button_background);
-            updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
-        }
-        else {
-            String text = getString(R.string.follow);
-            Drawable drawable = getDrawable(R.drawable.follow_button_background);
-            updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
-        }
-    }
 
     @Override
     public void onFollowButton(boolean following,HashSet<Integer> positions, AuthorDetails[] authorDetails, AuthorDetails authorDetail){
-        PreFetchLayoutManager pflm  = (PreFetchLayoutManager) mRecyclerView.getLayoutManager();
         for(int i= 1; i< authorDetails.length; i++) {
-            if (authorDetails[i].getDb().equals(authorDetail.getDb())) {
-                authorDetails[i].setIsFollowing(following);
+            if (details[i].getDb().equals(authorDetail.getDb())) {
+                details[i].setIsFollowing(following);
             }
             if(following) {
                 String text = getString(R.string.following);
                 Drawable drawable = getDrawable(R.drawable.followed_button_background);
-                updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
+                updateButtons(positions, text, drawable);
             }
             else {
                 String text = getString(R.string.follow);
                 Drawable drawable = getDrawable(R.drawable.follow_button_background);
-                updateButtons(positions, text, drawable, following, authorDetails, authorDetail);
+                updateButtons(positions, text, drawable);
             }
-            //authorDetailsAdapter.notifyDataSetChanged();
 
         }
     }
+@Override
+public void onAuthorButtonClicked(boolean following, HashSet<Integer> set){
+    for(int i= 1; i< details.length; i++) {
+            details[i].setIsFollowing(following);
+        }
+    if(following) {
+        String text = getString(R.string.following);
+        Drawable drawable = getDrawable(R.drawable.followed_button_background);
+        updateButtons(set, text, drawable);
+    }
+    else {
+        String text = getString(R.string.follow);
+        Drawable drawable = getDrawable(R.drawable.follow_button_background);
+        updateButtons(set, text, drawable);
+    }
 
-    private void updateButtons(HashSet<Integer> positions, String text, Drawable drawable, boolean following, AuthorDetails[] authorDetails, AuthorDetails authorDetail) {
-        PreFetchLayoutManager pflm  = (PreFetchLayoutManager) mRecyclerView.getLayoutManager();
+}
+
+
+    private void updateButtons(HashSet<Integer> positions, String text, Drawable drawable){
+        LinearLayoutManager pflm  = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         int first = pflm.findFirstVisibleItemPosition();
         int last =  pflm.findLastVisibleItemPosition();
                for (int pos : positions) {
@@ -102,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements AuthorDetailsAdap
                     }
                 }
 
-
-}
+    }
 
 }

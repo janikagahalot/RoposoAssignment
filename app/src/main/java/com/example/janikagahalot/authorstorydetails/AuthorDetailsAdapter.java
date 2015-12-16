@@ -148,7 +148,7 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
                     mDetails[0].setIsFollowing(true);
                     button.setText(mContext.getString(R.string.un_follow));
                     button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
-                    mListener.onFollowButton(true, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails, mDetails[0]);
+                  mListener.onAuthorButtonClicked(true,commonItems.get(mDetails[getLayoutPosition()+1].getDb()) );
                 }
                 else {
                     mDetails[getLayoutPosition()].setIsFollowing(true);
@@ -162,11 +162,9 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
                     mDetails[0].setIsFollowing(false);
                     button.setText(mContext.getString(R.string.follow));
                     button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
-
-
+                    mListener.onAuthorButtonClicked(false,commonItems.get(mDetails[getLayoutPosition()+1].getDb()) );
                 }
                 else{
-                   // mListener.onFollowButtonClicked(false, commonItems.get(mDetails[getLayoutPosition()].getTitle()), mDetails, mDetails[getLayoutPosition()]);
                     mDetails[getLayoutPosition()].setIsFollowing(false);
                     button.setText(mContext.getString(R.string.follow));
                     button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
@@ -180,7 +178,7 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
     }
 
     public interface onFollowButtonClickListener {
-        void onFollowButtonClicked(boolean following, HashSet<Integer> set, AuthorDetails[] authorDetails, AuthorDetails authorDetail);
+        void onAuthorButtonClicked(boolean following, HashSet<Integer> set);
         void onFollowButton(boolean following, HashSet<Integer> set, AuthorDetails[] authorDetails, AuthorDetails authorDetail);
     }
 }
