@@ -154,7 +154,7 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
                     mDetails[getLayoutPosition()].setIsFollowing(true);
                     button.setText(mContext.getString(R.string.un_follow));
                     button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
-                    mListener.onFollowButton(true, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails, mDetails[getLayoutPosition()]);
+                    mListener.onFollowButton(true, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails[getLayoutPosition()]);
                 }
             }
             else  {
@@ -168,7 +168,7 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
                     mDetails[getLayoutPosition()].setIsFollowing(false);
                     button.setText(mContext.getString(R.string.follow));
                     button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
-                    mListener.onFollowButton(false, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails, mDetails[getLayoutPosition()]);
+                    mListener.onFollowButton(false, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails[getLayoutPosition()]);
 
 
                 }
@@ -179,6 +179,6 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
 
     public interface onFollowButtonClickListener {
         void onAuthorButtonClicked(boolean following, HashSet<Integer> set);
-        void onFollowButton(boolean following, HashSet<Integer> set, AuthorDetails[] authorDetails, AuthorDetails authorDetail);
+        void onFollowButton(boolean following, HashSet<Integer> set, AuthorDetails authorDetail);
     }
 }

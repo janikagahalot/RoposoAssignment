@@ -55,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements AuthorDetailsAdap
 
 
     @Override
-    public void onFollowButton(boolean following,HashSet<Integer> positions, AuthorDetails[] authorDetails, AuthorDetails authorDetail){
-        for(int i= 1; i< authorDetails.length; i++) {
+    public void onFollowButton(boolean following,HashSet<Integer> positions, AuthorDetails authorDetail){
+        details[0].setIsFollowing(following);
+        for(int i= 1; i< details.length; i++) {
             if (details[i].getDb().equals(authorDetail.getDb())) {
                 details[i].setIsFollowing(following);
             }
@@ -96,15 +97,15 @@ public void onAuthorButtonClicked(boolean following, HashSet<Integer> set){
         LinearLayoutManager pflm  = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         int first = pflm.findFirstVisibleItemPosition();
         int last =  pflm.findLastVisibleItemPosition();
+       // int pos= 0;
                for (int pos : positions) {
-                    if (pos >= first && pos <= last) {
-                        View view = pflm.findViewByPosition(pos);
-                        Button button = (Button) view.findViewById(R.id.user_follow_button);
-                        button.setText(text);
-                        button.setBackground(drawable);
-                    }
-                }
-
+                   if (pos-1 >= first && pos-1 <= last) {
+                       View view = pflm.findViewByPosition(pos-1);
+                       Button button = (Button) view.findViewById(R.id.user_follow_button);
+                       button.setText(text);
+                       button.setBackground(drawable);
+                   }
+               }
     }
 
 }
