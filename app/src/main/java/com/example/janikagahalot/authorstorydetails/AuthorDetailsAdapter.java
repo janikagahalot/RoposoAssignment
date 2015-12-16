@@ -26,11 +26,11 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
     private static AuthorDetails[] mDetails;
     private static Context mContext;
     private static onFollowButtonClickListener mListener;
-    private static HashMap<String, HashSet<Integer>> commonItems = new HashMap<>();
     public AuthorDetailsAdapter(Context context, AuthorDetails[] details, onFollowButtonClickListener listener) {
         mDetails = details;
         mContext = context;
         mListener = listener;
+
     }
     @Override
     public RowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,8 +39,25 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
     }
 
     @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
+    @Override
     public void onBindViewHolder(RowViewHolder holder, int position) {
         AuthorDetails authorDetails = mDetails[position];
+        Log.e(this.toString(),"position being " + position);
+        Log.e(this.toString(),"following being " + authorDetails.getIsFollowing());
+
+        if(authorDetails.getIsFollowing() || mDetails[0].getIsFollowing()) {
+            holder.mFollowButton.setText(mContext.getString(R.string.un_follow));
+            holder.mFollowButton.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
+        }
+        else {
+            holder.mFollowButton.setText(mContext.getString(R.string.follow));
+            holder.mFollowButton.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
+        }
+
         if(position == 0) {
             holder.mTitle.setText(authorDetails.getUsername());
             holder.mDescription.setText(authorDetails.getAbout());
@@ -48,15 +65,6 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
             holder.mFollowing.setText(authorDetails.getFollowing().toString());
             holder.mFollowerText.setText(mContext.getString(R.string.followers));
             holder.mFollowingText.setText(mContext.getString(R.string.following));
-            if(authorDetails.getIsFollowing()) {
-                holder.mFollowButton.setText(mContext.getString(R.string.un_follow));
-                holder.mFollowButton.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
-
-            }
-            else {
-                holder.mFollowButton.setText(mContext.getString(R.string.follow));
-                holder.mFollowButton.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
-            }
             Picasso.with(mContext)
                     .load(authorDetails.getImage())
                     .into(holder.mProfile);
@@ -68,23 +76,6 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
             holder.mFollowingText.setText(mContext.getString(R.string.comments));
             holder.mFollowing.setText(authorDetails.getLikesCount().toString());
             holder.mFollowers.setText(authorDetails.getCommentCount().toString());
-            if(authorDetails.getIsFollowing()) {
-                holder.mFollowButton.setText(mContext.getString(R.string.un_follow));
-                holder.mFollowButton.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
-            }
-            else {
-                holder.mFollowButton.setText(mContext.getString(R.string.follow));
-                holder.mFollowButton.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
-            }
-            if(commonItems.containsKey(authorDetails.getDb())) {
-                HashSet<Integer> set  = commonItems.get(authorDetails.getDb());
-                set.add(position);
-            }
-            else {
-                HashSet<Integer> positions  = new HashSet<>();
-                positions.add(position);
-                commonItems.put(authorDetails.getDb(), positions);
-            }
             Picasso.with(mContext)
                     .load(authorDetails.getSi())
                     .into(holder.mProfile);
@@ -144,33 +135,26 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
             Button button  = (Button) v;
 
             if(button.getText().equals(mContext.getString(R.string.follow))) {
+                mDetails[getLayoutPosition()].setIsFollowing(true);
+                button.setText(mContext.getString(R.string.un_follow));
+                button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
+
                 if(getLayoutPosition() == 0) {
-                    mDetails[0].setIsFollowing(true);
-                    button.setText(mContext.getString(R.string.un_follow));
-                    button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
-                  mListener.onAuthorButtonClicked(true,commonItems.get(mDetails[getLayoutPosition()+1].getDb()) );
+                    mListener.onFollowAll(true);
                 }
                 else {
-                    mDetails[getLayoutPosition()].setIsFollowing(true);
-                    button.setText(mContext.getString(R.string.un_follow));
-                    button.setBackground(mContext.getDrawable(R.drawable.followed_button_background));
-                    mListener.onFollowButton(true, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails[getLayoutPosition()]);
+                    mListener.onFollowButton(true, mDetails[getLayoutPosition()].getDb());
                 }
             }
             else  {
+                mDetails[getLayoutPosition()].setIsFollowing(false);
+                button.setText(mContext.getString(R.string.follow));
+                button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
                 if (getLayoutPosition() == 0) {
-                    mDetails[0].setIsFollowing(false);
-                    button.setText(mContext.getString(R.string.follow));
-                    button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
-                    mListener.onAuthorButtonClicked(false,commonItems.get(mDetails[getLayoutPosition()+1].getDb()) );
+                    mListener.onFollowAll(false);
                 }
                 else{
-                    mDetails[getLayoutPosition()].setIsFollowing(false);
-                    button.setText(mContext.getString(R.string.follow));
-                    button.setBackground(mContext.getDrawable(R.drawable.follow_button_background));
-                    mListener.onFollowButton(false, commonItems.get(mDetails[getLayoutPosition()].getDb()), mDetails[getLayoutPosition()]);
-
-
+                    mListener.onFollowButton(false, mDetails[getLayoutPosition()].getDb());
                 }
             }
         }
@@ -178,7 +162,7 @@ public class AuthorDetailsAdapter  extends RecyclerView.Adapter<AuthorDetailsAda
     }
 
     public interface onFollowButtonClickListener {
-        void onAuthorButtonClicked(boolean following, HashSet<Integer> set);
-        void onFollowButton(boolean following, HashSet<Integer> set, AuthorDetails authorDetail);
+        void onFollowButton(boolean following, String key);
+        void onFollowAll(boolean following);
     }
 }
